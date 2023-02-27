@@ -1,19 +1,28 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-export default function Cocktail({ image, name, id, info, glass }) {
+import Cocktail from './Cocktail'
+import Loading from './Loading'
+import { useGlobalContext } from '../context'
+
+export default function CocktailList() {
+  const { cocktails, loading } = useGlobalContext()
+  if (loading) {
+    return <Loading/>
+  }
+  if (cocktails.length < 1) {
+    return (
+      <h2 className='section-title'>
+        no cocktails matched your search criteria
+      </h2>
+    )
+  }
   return (
-    <article className='cocktail'>
-      <div className='img-container'>
-        <img src={image} alt={name} />
+    <section className='section'>
+      <h2 className='section-title'>cocktails</h2>
+      <div className='cocktails-center'>
+        {cocktails.map((item) => {
+          return <Cocktail key={item.id} {...item} />
+        })}
       </div>
-      <div className='cocktail-footer'>
-        <h3>{name}</h3>
-        <h4>{glass}</h4>
-        <p>{info}</p>
-        <Link to={`/cocktail/${id}`} className='btn btn-primary btn-details'>
-          details
-        </Link>
-      </div>
-    </article>
+    </section>
   )
 }
